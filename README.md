@@ -31,15 +31,34 @@ style (the .blend alternates door / shop window via the implicit index).
 
 ## Blender tooling (Blender 4.2+)
 
-```sh
-# re-export the asset kit after editing part meshes
-blender --background "Procedural Building.blend" --python tools/export_kit.py -- public/assets/kit.glb
+All commands are run from the project root
+(`C:\Users\chiro\Documents\GitHub\BasicProceduralBuilding>`), Windows PowerShell
+or cmd. Adjust the Blender path to your installed version.
 
-# dump the node graph to JSON
-blender --background "Procedural Building.blend" --python tools/dump_blend.py -- dump.json
+```powershell
+# re-export the asset kit after editing part meshes in the .blend
+& "C:\Program Files\Blender Foundation\Blender 5.0\blender.exe" --background "Procedural Building.blend" --python tools\export_kit.py -- public\assets\kit.glb
 
-# dump evaluated instances (ground truth) and check the port against them
-blender --background "Procedural Building.blend" --python tools/dump_instances.py -- inst.json 5 7 6
-npm run build && npx vite preview &
-node tools/verify_placements.mjs http://localhost:4173 inst.json 5 7 6
+# dump the node graph to JSON (for inspecting graph changes)
+& "C:\Program Files\Blender Foundation\Blender 5.0\blender.exe" --background "Procedural Building.blend" --python tools\dump_blend.py -- dump.json
+
+# dump evaluated instances (ground truth) for a given Width Length Height
+& "C:\Program Files\Blender Foundation\Blender 5.0\blender.exe" --background "Procedural Building.blend" --python tools\dump_instances.py -- inst.json 5 7 6
 ```
+
+In cmd.exe, drop the leading `&` (it is PowerShell's call operator).
+
+## Verifying the port against Blender
+
+After a re-export or generator change, check that the app still matches the
+.blend instance-for-instance (needs Chrome installed):
+
+```powershell
+npm run build
+npm run preview        # serves on http://localhost:4173, keep it running
+# in a second terminal:
+node tools\verify_placements.mjs http://localhost:4173 inst.json 5 7 6
+```
+
+`PLACEMENTS MATCH` means every instance position, rotation, and window variant
+is identical to Blender's evaluated depsgraph.
