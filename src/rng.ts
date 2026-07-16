@@ -28,6 +28,11 @@ export function hashInt2d(kx: number, ky: number): number {
   return c;
 }
 
+/** hash mapped to [0,1] — used for deterministic environment scatter */
+export function hash01(id: number, seed: number): number {
+  return hashInt2d(id, seed) / 4294967295;
+}
+
 /** Random Value (Int): hash(id, seed) % range + min, exactly like Blender */
 export function randInt(min: number, max: number, id: number, seed: number): number {
   const range = max - min + 1;

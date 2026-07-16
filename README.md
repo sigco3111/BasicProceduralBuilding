@@ -19,6 +19,47 @@ Controls: **width / length / height** (the graph's modifier inputs), **window
 seed** (the Random Value node's seed, 4 in the .blend), and **ground floor**
 style (the .blend alternates door / shop window via the implicit index).
 
+## Environment & look
+
+The building sits on a stylized floating **diorama pedestal** that resizes with
+it — grass top, soil sides, a plaza slab + curb under the footprint, and
+deterministic low-poly props in the building's palette (green + pink-blossom
+trees, bushes, teal street lamps). Everything is generated in
+[src/environment.ts](src/environment.ts); no textures or external assets.
+
+- **Time-of-day presets** (environment folder): *golden hour* (default), *day*,
+  and *night* — each drives the gradient sky dome (with sun glow and night
+  stars), fog, sun/fill/ambient rig, drifting low-poly clouds, street-lamp
+  glow, window-glass emissive (windows light up at night), exposure, and the
+  post grade.
+- **Cinematic post stack** ([src/postfx.ts](src/postfx.ts)): bloom → tone map →
+  film grade (vignette, animated grain, chromatic aberration, saturation /
+  contrast), all adjustable under environment ▸ cinematic.
+- **Auto-orbit** turntable + clouds toggle in the same folder.
+
+## Weather (ported from BuildingGeneratorThreeJS)
+
+The GUI has **snow** and **rain** folders (mutually exclusive master toggles),
+each with its full set of live settings:
+
+- **Snow** — *snowfall* (density, fall speed, flake size, sway, opacity, color,
+  fall height, wind strength/direction) and *accumulation* (coverage, patch
+  scale/softness, height variation, seed, flatness, color, roughness, relief
+  strength/scale, sparkle). Snow settles as a shell pass that shares the
+  building's geometry + instance buffers (zero extra memory) and only shows on
+  upward faces — [src/snow.ts](src/snow.ts), [src/snowAccum.ts](src/snowAccum.ts).
+- **Rain** — *rainfall* (density, fall speed, streak length/width, opacity,
+  color, fall height, wind strength/direction) and *wetness* (coverage, mask
+  scale/softness, height variation, seed, surface wetness, wet darkness,
+  reflection roughness, droplet beading/density, top puddles, flatness, ripple
+  strength/scale/speed/density). Wetness is injected in place into every
+  building material via `onBeforeCompile` — no extra geometry —
+  [src/rain.ts](src/rain.ts), [src/wet.ts](src/wet.ts).
+
+Both effects key off world-up, so they follow the building at any size. The
+diorama's plaza, curb, and grass are wet/snow targets too — rain leaves glossy
+puddle patches on the ground and snow caps the walkable tops.
+
 ## How the port works
 
 - Each facade is a grid of 1×1 cells: top row → roof rim (corner piece at the
