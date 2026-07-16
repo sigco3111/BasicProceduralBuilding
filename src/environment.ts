@@ -284,6 +284,7 @@ export class Environment {
     });
     const bulb = new Mesh(new SphereGeometry(0.16, 12, 8), bulbMat);
     bulb.position.y = 2.42;
+    bulb.userData.noSnow = true; // glowing glass — snow would look wrong and dim it
     g.add(bulb);
     const cap = new Mesh(new CylinderGeometry(0.2, 0.1, 0.12, 8), this.matPost);
     cap.position.y = 2.56;
@@ -331,6 +332,7 @@ export class Environment {
     );
     ao.rotation.x = -Math.PI / 2;
     ao.position.y = 0.115;
+    ao.userData.noSnow = true; // transparent contact-shadow decal, not a surface
     this.diorama.add(ao);
 
     // trees + bushes on the outer grass ring (deterministic scatter, kept low so
@@ -364,14 +366,27 @@ export class Environment {
       this.diorama.add(l);
     }
 
-    // snow shell duplicates for the walkable tops (share the kit's shell material)
+    // snow shell duplicates for EVERY diorama mesh (same principle as the
+    // building: shared geometry, extruded by the snow shader, fragments off the
+    // upward-facing accumulation mask discarded). Grass top, plaza, curb, tree
+    // canopies, bushes, trunks and lamp posts all collect caps; the emissive
+    // bulbs and the transparent contact-shadow decal opt out via userData.
     if (this.shellMaterial) {
       const shell = new Group();
       shell.name = "envSnowShell";
       shell.visible = this.snowShell?.visible ?? false;
-      for (const src of [curb, slab] as Mesh[]) {
+      this.diorama.updateMatrixWorld(true);
+      const targets: Mesh[] = [];
+      this.diorama.traverse(o => {
+        const m = o as Mesh;
+        if (m.isMesh && !m.userData.noSnow) targets.push(m);
+      });
+      for (const src of targets) {
         const dup = new Mesh(src.geometry, this.shellMaterial);
-        dup.position.copy(src.position);
+        // props are nested in groups (tree/lamp roots carry position/scale/rotation),
+        // so bake the full world transform into the duplicate
+        dup.matrixAutoUpdate = false;
+        dup.matrix.copy(src.matrixWorld);
         shell.add(dup);
       }
       this.diorama.add(shell);

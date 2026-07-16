@@ -57,8 +57,11 @@ each with its full set of live settings:
   [src/rain.ts](src/rain.ts), [src/wet.ts](src/wet.ts).
 
 Both effects key off world-up, so they follow the building at any size. The
-diorama's plaza, curb, and grass are wet/snow targets too — rain leaves glossy
-puddle patches on the ground and snow caps the walkable tops.
+diorama is a full weather target too: rain leaves glossy puddle patches on the
+plaza and grass, and every diorama mesh (grass top, plaza, curb, tree canopies,
+bushes, trunks, lamp posts) carries a snow-shell duplicate — only the emissive
+lamp bulbs and the contact-shadow decal opt out (clouds are separate and never
+shelled).
 
 ## How the port works
 
