@@ -1,4 +1,4 @@
-# 🏢 BasicProceduralBuilding — 절차적 빌딩 컨피규레이터 (한국어 한글판)
+# 🏢 BasicProceduralBuilding — 절차적 빌딩 컨피규레이터
 
 **Three.js + TypeScript** 기반의 **절차적 빌딩 컨피규레이터** 입니다. Blender의 Geometry Nodes 그래프에서 포팅된 배치 로직이 동일한 시드로 인스턴스 단위까지 동일한 결과를 보장하며, 스타일라이즈드 디오라마 환경과 풀 날씨 시스템(눈/비)을 포함합니다.
 
