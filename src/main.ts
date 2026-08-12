@@ -4,6 +4,7 @@ import {
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import GUI from "lil-gui";
+import { t } from "./i18n";
 import { defaultParams, type BuildingParams } from "./params";
 import { generateBuilding, roofPlate } from "./generator";
 import { Kit } from "./kit";
@@ -147,103 +148,103 @@ function regenerate(): void {
 }
 
 // ---- GUI ----
-const gui = new GUI({ title: "building configurator" });
+const gui = new GUI({ title: t("guiTitle") });
 
-const fBuild = gui.addFolder("building");
-fBuild.add(params, "width", 2, 30, 1);
-fBuild.add(params, "length", 2, 30, 1);
-fBuild.add(params, "height", 2, 30, 1);
-fBuild.add(params, "seed", 0, 100, 1).name("window seed");
-fBuild.add(params, "groundStyle", ["alternate", "doors", "shop windows"]).name("ground floor");
+const fBuild = gui.addFolder(t("folderBuilding"));
+fBuild.add(params, "width", 2, 30, 1).name(t("width"));
+fBuild.add(params, "length", 2, 30, 1).name(t("length"));
+fBuild.add(params, "height", 2, 30, 1).name(t("height"));
+fBuild.add(params, "seed", 0, 100, 1).name(t("windowSeed"));
+fBuild.add(params, "groundStyle", ["alternate", "doors", "shop windows"]).name(t("groundFloor"));
 fBuild.onChange(() => regenerate());
 
 // ---- environment / look ----
 const envState = { preset: "golden hour" as PresetName, autoOrbit: true, orbitSpeed: 0.5, clouds: true };
-const fEnv = gui.addFolder("environment");
-fEnv.add(envState, "preset", ["golden hour", "day", "night"]).name("time of day")
+const fEnv = gui.addFolder(t("folderEnvironment"));
+fEnv.add(envState, "preset", ["golden hour", "day", "night"]).name(t("timeOfDay"))
   .onChange((v: PresetName) => env.applyPreset(v, post));
-fEnv.add(envState, "autoOrbit").name("auto orbit").onChange((v: boolean) => (controls.autoRotate = v));
-fEnv.add(envState, "orbitSpeed", -3, 3, 0.05).name("orbit speed")
+fEnv.add(envState, "autoOrbit").name(t("autoOrbit")).onChange((v: boolean) => (controls.autoRotate = v));
+fEnv.add(envState, "orbitSpeed", -3, 3, 0.05).name(t("orbitSpeed"))
   .onChange((v: number) => (controls.autoRotateSpeed = v));
-fEnv.add(envState, "clouds").name("clouds").onChange((v: boolean) => env.setCloudsVisible(v));
-const fCine = fEnv.addFolder("cinematic");
-fCine.add(post.bloom, "strength", 0, 1.5, 0.01).name("bloom");
-fCine.add(post.gradeUniforms["uVignette"], "value", 0, 1, 0.01).name("vignette");
-fCine.add(post.gradeUniforms["uGrain"], "value", 0, 0.2, 0.005).name("film grain");
-fCine.add(post.gradeUniforms["uChroma"], "value", 0, 0.01, 0.0001).name("chromatic aberration");
-fCine.add(post.gradeUniforms["uSaturation"], "value", 0, 2, 0.01).name("saturation");
-fCine.add(post.gradeUniforms["uContrast"], "value", 0.7, 1.6, 0.01).name("contrast");
+fEnv.add(envState, "clouds").name(t("clouds")).onChange((v: boolean) => env.setCloudsVisible(v));
+const fCine = fEnv.addFolder(t("folderCinematic"));
+fCine.add(post.bloom, "strength", 0, 1.5, 0.01).name(t("bloom"));
+fCine.add(post.gradeUniforms["uVignette"], "value", 0, 1, 0.01).name(t("vignette"));
+fCine.add(post.gradeUniforms["uGrain"], "value", 0, 0.2, 0.005).name(t("filmGrain"));
+fCine.add(post.gradeUniforms["uChroma"], "value", 0, 0.01, 0.0001).name(t("chromaticAberration"));
+fCine.add(post.gradeUniforms["uSaturation"], "value", 0, 2, 0.01).name(t("saturation"));
+fCine.add(post.gradeUniforms["uContrast"], "value", 0.7, 1.6, 0.01).name(t("contrast"));
 fCine.close();
 controls.autoRotate = envState.autoOrbit;
 controls.autoRotateSpeed = envState.orbitSpeed;
 
 // ---- snow GUI (master toggle + snowfall + accumulation) ----
-const fSnow = gui.addFolder("snow");
-fSnow.add(snowState, "enabled").name("enabled").onChange(applySnowEnabled);
-const fFall = fSnow.addFolder("snowfall");
-fFall.add(snowState, "density", 0, 1, 0.01).name("density").onChange((v: number) => snow.setDensity(v));
-fFall.add(snow.uniforms.uSpeed, "value", 0.5, 12, 0.1).name("fall speed");
-fFall.add(snow.uniforms.uSize, "value", 0.01, 0.25, 0.001).name("flake size");
-fFall.add(snow.uniforms.uSway, "value", 0, 3, 0.01).name("sway");
-fFall.add(snow.uniforms.uOpacity, "value", 0, 1, 0.01).name("opacity");
-fFall.addColor({ c: "#ffffff" }, "c").name("color").onChange((v: string) => snow.uniforms.uColor.value.set(v));
-fFall.add(snow.uniforms.uVolume.value, "y", 10, 80, 1).name("fall height");
-fFall.add(wind, "strength", 0, 25, 0.1).name("wind").onChange(applyWind);
-fFall.add(wind, "direction", 0, 360, 1).name("wind dir").onChange(applyWind);
+const fSnow = gui.addFolder(t("folderSnow"));
+fSnow.add(snowState, "enabled").name(t("enabled")).onChange(applySnowEnabled);
+const fFall = fSnow.addFolder(t("folderSnowfall"));
+fFall.add(snowState, "density", 0, 1, 0.01).name(t("density")).onChange((v: number) => snow.setDensity(v));
+fFall.add(snow.uniforms.uSpeed, "value", 0.5, 12, 0.1).name(t("fallSpeed"));
+fFall.add(snow.uniforms.uSize, "value", 0.01, 0.25, 0.001).name(t("flakeSize"));
+fFall.add(snow.uniforms.uSway, "value", 0, 3, 0.01).name(t("sway"));
+fFall.add(snow.uniforms.uOpacity, "value", 0, 1, 0.01).name(t("opacity"));
+fFall.addColor({ c: "#ffffff" }, "c").name(t("color")).onChange((v: string) => snow.uniforms.uColor.value.set(v));
+fFall.add(snow.uniforms.uVolume.value, "y", 10, 80, 1).name(t("fallHeight"));
+fFall.add(wind, "strength", 0, 25, 0.1).name(t("wind")).onChange(applyWind);
+fFall.add(wind, "direction", 0, 360, 1).name(t("windDir")).onChange(applyWind);
 fFall.close();
-const fAccum = fSnow.addFolder("accumulation");
-fAccum.add(accumU.uSnowCoverage, "value", 0, 1, 0.01).name("coverage");
-fAccum.add(accumU.uSnowScale, "value", 0.1, 4, 0.01).name("patch scale");
-fAccum.add(accumU.uSnowEdge, "value", 0.01, 0.4, 0.005).name("patch softness");
-fAccum.add(accumU.uSnowHeightVar, "value", 0, 2, 0.01).name("height variation");
-fAccum.add(accumU.uSnowSeed.value, "x", -50, 50, 0.1).name("seed x").listen();
-fAccum.add(accumU.uSnowSeed.value, "y", -50, 50, 0.1).name("seed y").listen();
+const fAccum = fSnow.addFolder(t("folderAccumulation"));
+fAccum.add(accumU.uSnowCoverage, "value", 0, 1, 0.01).name(t("coverage"));
+fAccum.add(accumU.uSnowScale, "value", 0.1, 4, 0.01).name(t("patchScale"));
+fAccum.add(accumU.uSnowEdge, "value", 0.01, 0.4, 0.005).name(t("patchSoftness"));
+fAccum.add(accumU.uSnowHeightVar, "value", 0, 2, 0.01).name(t("heightVariation"));
+fAccum.add(accumU.uSnowSeed.value, "x", -50, 50, 0.1).name(t("seedX")).listen();
+fAccum.add(accumU.uSnowSeed.value, "y", -50, 50, 0.1).name(t("seedY")).listen();
 fAccum.add({ randomize: () => accumU.uSnowSeed.value.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100) },
-  "randomize").name("🎲 randomize seed");
-fAccum.add(accumU.uSnowFlatThreshold, "value", 0, 1, 0.01).name("flatness");
-fAccum.addColor({ c: "#eaf1ff" }, "c").name("color").onChange((v: string) => accumU.uSnowColor.value.set(v));
-fAccum.add(accumU.uSnowRoughness, "value", 0.3, 1, 0.01).name("roughness");
-fAccum.add(accumU.uSnowBump, "value", 0, 1.5, 0.01).name("relief strength");
-fAccum.add(accumU.uSnowBumpScale, "value", 0.5, 8, 0.05).name("relief scale");
-fAccum.add(accumU.uSnowSparkle, "value", 0, 1, 0.01).name("sparkle");
-fAccum.add(accumU.uSnowSparkleScale, "value", 30, 300, 1).name("sparkle density");
+  "randomize").name(t("randomizeSeed"));
+fAccum.add(accumU.uSnowFlatThreshold, "value", 0, 1, 0.01).name(t("flatness"));
+fAccum.addColor({ c: "#eaf1ff" }, "c").name(t("color")).onChange((v: string) => accumU.uSnowColor.value.set(v));
+fAccum.add(accumU.uSnowRoughness, "value", 0.3, 1, 0.01).name(t("roughness"));
+fAccum.add(accumU.uSnowBump, "value", 0, 1.5, 0.01).name(t("reliefStrength"));
+fAccum.add(accumU.uSnowBumpScale, "value", 0.5, 8, 0.05).name(t("reliefScale"));
+fAccum.add(accumU.uSnowSparkle, "value", 0, 1, 0.01).name(t("sparkle"));
+fAccum.add(accumU.uSnowSparkleScale, "value", 30, 300, 1).name(t("sparkleDensity"));
 fAccum.close();
 fSnow.close();
 
 // ---- rain GUI (master toggle + rainfall + wetness) ----
-const fRain = gui.addFolder("rain");
-fRain.add(rainState, "enabled").name("enabled").onChange(applyRainEnabled);
-const fRainfall = fRain.addFolder("rainfall");
-fRainfall.add(rainState, "density", 0, 1, 0.01).name("density").onChange((v: number) => rain.setDensity(v));
-fRainfall.add(rain.uniforms.uSpeed, "value", 2, 60, 0.5).name("fall speed");
-fRainfall.add(rain.uniforms.uLength, "value", 0.2, 4, 0.01).name("streak length");
-fRainfall.add(rain.uniforms.uWidth, "value", 0.002, 0.05, 0.001).name("streak width");
-fRainfall.add(rain.uniforms.uOpacity, "value", 0, 1, 0.01).name("opacity");
-fRainfall.addColor({ c: "#b4b8bf" }, "c").name("color").onChange((v: string) => rain.uniforms.uColor.value.set(v));
-fRainfall.add(rain.uniforms.uVolume.value, "y", 10, 80, 1).name("fall height");
-fRainfall.add(rainWind, "strength", 0, 25, 0.1).name("wind").onChange(applyRainWind);
-fRainfall.add(rainWind, "direction", 0, 360, 1).name("wind dir").onChange(applyRainWind);
+const fRain = gui.addFolder(t("folderRain"));
+fRain.add(rainState, "enabled").name(t("enabled")).onChange(applyRainEnabled);
+const fRainfall = fRain.addFolder(t("folderRainfall"));
+fRainfall.add(rainState, "density", 0, 1, 0.01).name(t("density")).onChange((v: number) => rain.setDensity(v));
+fRainfall.add(rain.uniforms.uSpeed, "value", 2, 60, 0.5).name(t("fallSpeed"));
+fRainfall.add(rain.uniforms.uLength, "value", 0.2, 4, 0.01).name(t("streakLength"));
+fRainfall.add(rain.uniforms.uWidth, "value", 0.002, 0.05, 0.001).name(t("streakWidth"));
+fRainfall.add(rain.uniforms.uOpacity, "value", 0, 1, 0.01).name(t("opacity"));
+fRainfall.addColor({ c: "#b4b8bf" }, "c").name(t("color")).onChange((v: string) => rain.uniforms.uColor.value.set(v));
+fRainfall.add(rain.uniforms.uVolume.value, "y", 10, 80, 1).name(t("fallHeight"));
+fRainfall.add(rainWind, "strength", 0, 25, 0.1).name(t("wind")).onChange(applyRainWind);
+fRainfall.add(rainWind, "direction", 0, 360, 1).name(t("windDir")).onChange(applyRainWind);
 fRainfall.close();
-const fWet = fRain.addFolder("wetness");
-fWet.add(wetU.uPuddleCoverage, "value", 0, 1, 0.01).name("coverage");
-fWet.add(wetU.uPuddleScale, "value", 0.02, 2, 0.01).name("mask scale");
-fWet.add(wetU.uPuddleEdge, "value", 0.001, 0.4, 0.001).name("mask softness");
-fWet.add(wetU.uPuddleHeightVar, "value", 0, 2, 0.01).name("height variation");
-fWet.add(wetU.uPuddleSeed.value, "x", -50, 50, 0.1).name("seed x").listen();
-fWet.add(wetU.uPuddleSeed.value, "y", -50, 50, 0.1).name("seed y").listen();
+const fWet = fRain.addFolder(t("folderWetness"));
+fWet.add(wetU.uPuddleCoverage, "value", 0, 1, 0.01).name(t("coverage"));
+fWet.add(wetU.uPuddleScale, "value", 0.02, 2, 0.01).name(t("maskScale"));
+fWet.add(wetU.uPuddleEdge, "value", 0.001, 0.4, 0.001).name(t("maskSoftness"));
+fWet.add(wetU.uPuddleHeightVar, "value", 0, 2, 0.01).name(t("heightVariation"));
+fWet.add(wetU.uPuddleSeed.value, "x", -50, 50, 0.1).name(t("seedX")).listen();
+fWet.add(wetU.uPuddleSeed.value, "y", -50, 50, 0.1).name(t("seedY")).listen();
 fWet.add({ randomize: () => wetU.uPuddleSeed.value.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100) },
-  "randomize").name("🎲 randomize seed");
-fWet.add(wetU.uWetness, "value", 0, 1, 0.01).name("surface wetness");
-fWet.add(wetU.uWaterDarkness, "value", 0, 1, 0.01).name("wet darkness");
-fWet.add(wetU.uPuddleRoughness, "value", 0, 0.5, 0.001).name("reflection roughness");
-fWet.add(wetU.uDropletAmount, "value", 0, 1, 0.01).name("droplet beading");
-fWet.add(wetU.uDropletScale, "value", 2, 40, 0.5).name("droplet density");
-fWet.add(wetU.uTopPuddle, "value", 0, 1, 0.01).name("top puddles");
-fWet.add(wetU.uFlatThreshold, "value", 0.2, 0.99, 0.01).name("flatness");
-fWet.add(wetU.uRainRipple, "value", 0, 0.3, 0.001).name("ripple strength");
-fWet.add(wetU.uRippleScale, "value", 1, 20, 0.1).name("ripple scale");
-fWet.add(wetU.uRippleSpeed, "value", 0, 4, 0.01).name("ripple speed");
-fWet.add(wetU.uRippleDensity, "value", 0, 1, 0.01).name("ripple density");
+  "randomize").name(t("randomizeSeed"));
+fWet.add(wetU.uWetness, "value", 0, 1, 0.01).name(t("surfaceWetness"));
+fWet.add(wetU.uWaterDarkness, "value", 0, 1, 0.01).name(t("wetDarkness"));
+fWet.add(wetU.uPuddleRoughness, "value", 0, 0.5, 0.001).name(t("reflectionRoughness"));
+fWet.add(wetU.uDropletAmount, "value", 0, 1, 0.01).name(t("dropletBeading"));
+fWet.add(wetU.uDropletScale, "value", 2, 40, 0.5).name(t("dropletDensity"));
+fWet.add(wetU.uTopPuddle, "value", 0, 1, 0.01).name(t("topPuddles"));
+fWet.add(wetU.uFlatThreshold, "value", 0.2, 0.99, 0.01).name(t("flatness"));
+fWet.add(wetU.uRainRipple, "value", 0, 0.3, 0.001).name(t("rippleStrength"));
+fWet.add(wetU.uRippleScale, "value", 1, 20, 0.1).name(t("rippleScale"));
+fWet.add(wetU.uRippleSpeed, "value", 0, 4, 0.01).name(t("rippleSpeed"));
+fWet.add(wetU.uRippleDensity, "value", 0, 1, 0.01).name(t("rippleDensity"));
 fWet.close();
 fRain.close();
 
