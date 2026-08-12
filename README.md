@@ -8,7 +8,7 @@
 
 | 항목 | URL |
 |---|---|
-| 🌐 **라이브 데모** | **<https://basicproceduralbuilding.vercel.app>** |
+| 🌐 **라이브 데모** | **<https://sigco3111.github.io/BasicProceduralBuilding>** |
 | 📦 **이 저장소 (한국어 fork)** | <https://github.com/sigco3111/BasicProceduralBuilding> |
 | ⭐ **원본 저장소 (출처)** | <https://github.com/achrefelouafi/BasicProceduralBuilding> |
 
@@ -18,7 +18,7 @@
 
 ## ✨ 라이브 데모 둘러보기
 
-브라우저에서 **<https://basicproceduralbuilding.vercel.app>** 을 열면 즉시 절차적 빌딩을 만날 수 있습니다.
+브라우저에서 **<https://sigco3111.github.io/BasicProceduralBuilding>** 을 열면 즉시 절차적 빌딩을 만날 수 있습니다.
 
 **조작 방법**
 
@@ -64,7 +64,7 @@
 - **🔄 이중 언어 지원** — `src/i18n.ts` 모듈로 한국어 / 영어 토글 가능 (`setLanguage('en')` 호출)
 - **🛡️ 식별자 침투 0건** — 함수명 / 변수명 / TypeScript 타입 / 셰이더 유니폼은 원본 그대로 보존 (예: `PresetName` 유니온 타입, `groundStyle` 타입, `uTime`, `getWorldPosition` 등 망가짐 없음)
 - **✅ TypeScript 빌드 통과** — `tsc --noEmit` 타입 체크 + `vite build` 둘 다 통과, 725KB / 186KB gzip
-- **🚀 Vercel 프로덕션 배포** — `<https://basicproceduralbuilding.vercel.app>` (CDN, 자동 HTTPS)
+- **🚀 Vercel 프로덕션 배포** — `<https://sigco3111.github.io/BasicProceduralBuilding>` (CDN, 자동 HTTPS)
 
 ### 한국어화 번역 매핑 예시
 
@@ -258,7 +258,7 @@ import { t } from "./i18n";
 
 ### 6️⃣ Vercel 자동 도메인 사용
 
-CLI 가 준 첫 URL (`basicproceduralbuilding-cml7z29zd-...`) 은 Production Deployment Protection SSO 가드가 걸려 302 → 로그인 리다이렉트. **자동 할당된 production 도메인** (`basicproceduralbuilding.vercel.app`) 은 보호 없음 — 일반 사용자 접근용.
+CLI 가 준 첫 URL (`basicproceduralbuilding-cml7z29zd-...`) 은 Production Deployment Protection SSO 가드가 걸려 302 → 로그인 리다이렉트. **자동 할당된 production 도메인** (`sigco3111.github.io/BasicProceduralBuilding`) 은 보호 없음 — 일반 사용자 접근용.
 
 ---
 
@@ -371,6 +371,6 @@ SOFTWARE.
 | **원본 HEAD** | (원본 저장소 마지막 커밋) |
 | **한국어 fork HEAD** | `ae88054` (feat: 한글화 + i18n.ts) |
 | **배포 플랫폼** | Vercel |
-| **라이브 도메인** | <https://basicproceduralbuilding.vercel.app> |
+| **라이브 도메인** | <https://sigco3111.github.io/BasicProceduralBuilding> |
 
 🏢 **즐거운 빌딩 컨피규레이션 되세요!**
