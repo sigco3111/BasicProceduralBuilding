@@ -9,7 +9,6 @@
 | 항목 | URL |
 |---|---|
 | 🌐 **라이브 데모** | **<https://sigco3111.github.io/BasicProceduralBuilding>** |
-| 📦 **이 저장소 (한국어 fork)** | <https://github.com/sigco3111/BasicProceduralBuilding> |
 | ⭐ **원본 저장소 (출처)** | <https://github.com/achrefelouafi/BasicProceduralBuilding> |
 
 > 본 저장소는 [achrefelouafi/BasicProceduralBuilding](https://github.com/achrefelouafi/BasicProceduralBuilding) 의 **한국어 fork** 입니다. 원본의 모든 핵심 코드(Geometry Nodes 포팅, 디오라마, 눈/비 셰이더)와 라이선스(MIT)를 그대로 보존하면서 사용자 인터페이스만 한글로 번역·개선했습니다.
